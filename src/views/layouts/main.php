@@ -1,13 +1,20 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 
-/* @var $this yii\web\View */
-
-/* @var $content string */
-
 use app\widgets\Alert;
+use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\helpers\Html;
+use yii\widgets\Breadcrumbs;
 
+/* @var $this yii\web\View */
+/* @var $content string */
+/* @var $config app\Config */
+
+$status = '';
+$config = Yii::$app->get('config');
+if (!$config->empty()) {
+    $status = Html::tag('p', app\models\Device::statusHtml(), ['class' => 'navbar-text']);
+}
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -35,10 +42,22 @@ use yii\helpers\Html;
             'class' => 'container-fluid',
         ],
     ]);
+    echo $status;
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav navbar-right'],
+        'items' => [
+            ['label' => '设备列表', 'url' => ['/device/index']],
+            ['label' => '量产批次', 'url' => ['/apply/index']],
+        ],
+    ]);
     NavBar::end();
     ?>
 
     <div class="container-fluid">
+        <?= Breadcrumbs::widget([
+            'homeLink' => ['label' => '设备列表', 'url' => Yii::$app->homeUrl],
+            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+        ]) ?>
         <?= Alert::widget() ?>
         <?= $content ?>
     </div>

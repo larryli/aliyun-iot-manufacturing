@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use app\Config;
 use app\forms\SetupForm;
-use app\widgets\SetupActiveForm;
+use app\widgets\ActiveForm;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
@@ -50,11 +50,11 @@ class SiteController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             $model->setScenario('ajax');
             if ($model->load(Yii::$app->request->post())) {
-                if (!empty($validate = SetupActiveForm::validate($model))) {
+                if (!empty($validate = ActiveForm::validate($model))) {
                     return $validate;
                 }
                 return ['productKeys' => $this->renderAjax('_productKeys', [
-                    'form' => SetupActiveForm::begin(),
+                    'form' => ActiveForm::begin(),
                     'model' => $model,
                 ])];
             }

@@ -27,6 +27,9 @@ $config = [
         'db' => [
             'class' => yii\db\Connection::class,
         ],
+        'formatter' => [
+            'class' => app\Formatter::class,
+        ],
         'iot' => [
             'class' => app\aliyun\Iot::class,
             'client' => [
@@ -46,6 +49,9 @@ $config = [
                     'logVars' => YII_ENV_DEV ? ['_GET', '_POST', '_FILES', '_SERVER'] : [],
                 ],
             ],
+        ],
+        'mutex' => [
+            'class' => yii\mutex\FileMutex::class,
         ],
         'request' => [
             'cookieValidationKey' => 'default',

@@ -2,7 +2,7 @@
 
 namespace app\forms;
 
-use app\aliyun\Exception as AliyunException;
+use app\aliyun\Exception as AliException;
 use app\aliyun\Iot;
 use app\Config;
 use Yii;
@@ -14,6 +14,7 @@ use yii\db\Connection;
 use yii\db\Exception as DbException;
 use yii\di\Instance;
 use yii\helpers\ArrayHelper;
+use yii\mutex\MysqlMutex;
 use yii\validators\EachValidator;
 
 class SetupForm extends Model
@@ -239,7 +240,7 @@ class SetupForm extends Model
                 }
             } catch (InvalidConfigException $e) {
                 $this->addError('iotAccessKeyId', '内部错误：' . $e->getMessage());
-            } catch (AliyunException $e) {
+            } catch (AliException $e) {
                 switch ($e->getErrorCode()) {
                     case 'InvalidAccessKeyId.NotFound':
                         $this->addError('iotAccessKeyId', 'AccessKeyId 不存在。');
@@ -274,6 +275,8 @@ class SetupForm extends Model
                 if ($this->hasErrors()) {
                     return false;
                 }
+            } else {
+                $this->productKeys = [];
             }
             $config = [
                 'components' => [],
@@ -281,6 +284,9 @@ class SetupForm extends Model
             ];
             if ($this->dbPrefix == 'mysql') {
                 $config['components']['db'] = $this->configMysql();
+                $config['components']['mutex'] = [
+                    'class' => MysqlMutex::class,
+                ];
             } else {
                 $config['components']['db'] = $this->configSqlite();
             }

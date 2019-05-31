@@ -1,6 +1,6 @@
 <?php
 
-use app\widgets\SetupActiveForm;
+use app\widgets\ActiveForm;
 use yii\bootstrap\Html;
 use yii\web\YiiAsset;
 
@@ -25,7 +25,7 @@ $this->registerJs($js);
 
     <div class="setup-form">
 
-        <?php $form = SetupActiveForm::begin(); ?>
+        <?php $form = ActiveForm::begin(); ?>
 
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -63,6 +63,6 @@ $this->registerJs($js);
                 <?= Html::submitButton('设置', ['class' => 'btn btn-primary']) ?>
             </div>
         </div>
-        <?php SetupActiveForm::end(); ?>
+        <?php ActiveForm::end(); ?>
     </div>
 </div>

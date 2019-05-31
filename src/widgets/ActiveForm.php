@@ -2,9 +2,9 @@
 
 namespace app\widgets;
 
-use yii\bootstrap\ActiveForm;
+use yii\bootstrap\ActiveForm as BaseActiveForm;
 
-class SetupActiveForm extends ActiveForm
+class ActiveForm extends BaseActiveForm
 {
     /**
      * @internal

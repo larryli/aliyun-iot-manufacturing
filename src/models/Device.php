@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-use app\aliyun\Exception;
+use app\aliyun\Exception as AliException;
 use app\aliyun\Iot;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -209,7 +209,7 @@ class Device extends ActiveRecord
 
     /**
      * @return bool
-     * @throws Exception
+     * @throws AliException
      * @throws InvalidConfigException
      */
     public function beforeDelete()

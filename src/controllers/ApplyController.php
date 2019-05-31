@@ -13,7 +13,6 @@ use app\models\Product;
 use Throwable;
 use Yii;
 use yii\base\InvalidConfigException;
-use yii\base\InvalidValueException;
 use yii\data\ActiveDataProvider;
 use yii\db\Exception as DbException;
 use yii\db\StaleObjectException;
@@ -202,10 +201,8 @@ class ApplyController extends Controller
             } catch (DbException $e) {
                 throw new BadRequestHttpException($e->getMessage(), $e->getCode(), $e);
             }
-        } catch (InvalidValueException $e) {
-            throw new BadRequestHttpException($e->getMessage(), $e->getCode(), $e);
         } catch (AliException $e) {
-            throw new BadRequestHttpException($e->getMessage(), $e->getCode(), $e);
+            throw new BadRequestHttpException($e->getErrorMessage(), $e->getCode(), $e);
         }
     }
 
@@ -289,10 +286,8 @@ class ApplyController extends Controller
             if ($status['Status'] == 'CREATE_SUCCESS') {
                 return true; // 开始创建
             }
-        } catch (InvalidValueException $e) {
-            throw new BadRequestHttpException($e->getMessage(), $e->getCode(), $e);
         } catch (AliException $e) {
-            throw new BadRequestHttpException($e->getMessage(), $e->getCode(), $e);
+            throw new BadRequestHttpException($e->getErrorMessage(), $e->getCode(), $e);
         }
         return false; // 继续等待
     }

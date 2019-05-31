@@ -2,11 +2,10 @@
 
 namespace app\models;
 
-use app\aliyun\Exception;
+use app\aliyun\Exception as AliException;
 use app\aliyun\Iot;
 use Yii;
 use yii\base\InvalidConfigException;
-use yii\base\InvalidValueException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -35,18 +34,6 @@ class Apply extends ActiveRecord
      * @var string[]
      */
     protected $serialNos = [];
-    /**
-     * @var string
-     */
-    protected $prefix;
-    /**
-     * @var int
-     */
-    protected $start;
-    /**
-     * @var int
-     */
-    protected $len;
 
     /**
      * {@inheritdoc}
@@ -113,16 +100,16 @@ class Apply extends ActiveRecord
     {
         if (!$this->hasErrors() && preg_match('/\d+$/', $this->start_serial_no, $arr)) {
             $start = reset($arr);
-            $this->len = strlen($start);
-            $this->prefix = substr($this->start_serial_no, 0, -$this->len);
-            $this->start = intval($start);
-            $end = $this->pad($this->count - 1);
-            if (strlen($end) != $this->len) {
+            $len = strlen($start);
+            $prefix = substr($this->start_serial_no, 0, -$len);
+            $start = intval($start);
+            $end = str_pad($start + $this->count - 1, $len, '0', STR_PAD_LEFT);
+            if (strlen($end) != $len) {
                 $this->addError('start_serial_no', "起始 SerialNo 无法容纳 {$this->count} 个数据。");
             } else {
                 $this->serialNos = [];
                 for ($n = 0; $n < $this->count; $n++) {
-                    $this->serialNos[] = $this->prefix . $this->pad($n);
+                    $this->serialNos[] = $prefix . str_pad($start + $n, $len, '0', STR_PAD_LEFT);;
                 }
                 if (Device::find()->serialNo($this->serialNos)->exists()) {
                     $this->addError('start_serial_no', "生成的 SerialNo 列表已存在。");
@@ -146,11 +133,8 @@ class Apply extends ActiveRecord
             $iot = Yii::$app->get('iot');
             try {
                 $this->id = $iot->batchRegisterDevice($this->product_key, $this->count);
-            } catch (InvalidValueException $e) {
-                $this->addError('product_key', $e->getMessage());
-                return false;
-            } catch (Exception $e) {
-                $this->addError('product_key', $e->getMessage());
+            } catch (AliException $e) {
+                $this->addError('product_key', $e->getErrorMessage());
                 return false;
             }
         }
@@ -239,15 +223,6 @@ class Apply extends ActiveRecord
     public function getCountDoneDevices()
     {
         return $this->getDevices()->done()->count();
-    }
-
-    /**
-     * @param integer $n
-     * @return string
-     */
-    protected function pad($n)
-    {
-        return str_pad($this->start + $n, $this->len, '0', STR_PAD_LEFT);
     }
 
     /**

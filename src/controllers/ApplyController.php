@@ -176,7 +176,7 @@ class ApplyController extends Controller
             $rows = [];
             foreach ($results['ApplyDeviceList']['ApplyDeviceInfo'] as $result) {
                 $serialNo = $model->getSerialNo();
-                if ($serialNo === false) {
+                if ($serialNo === null) {
                     break;
                 }
                 $device = new Device([
@@ -238,6 +238,8 @@ class ApplyController extends Controller
      * @throws ConflictHttpException
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
+     * @throws StaleObjectException
+     * @throws Throwable
      */
     public function actionDeleting($id)
     {
@@ -245,7 +247,7 @@ class ApplyController extends Controller
             return static::percent('TEST_AJAX_DELETING');
         }
         $model = $this->findModel($id);
-        if (empty($model->firstUnusedDevice)) {
+        if (empty($model->unusedDevice)) {
             throw new NotFoundHttpException('此量产批次不存在未量产的设备。请结束操作。');
         }
         /** @var Mutex $mutex */
@@ -257,7 +259,7 @@ class ApplyController extends Controller
         $total = Yii::$app->cache->getOrSet($key, function () use ($model) {
             return $model->getDevices()->unused()->count();
         }, 600);
-        $model->firstUnusedDevice->delete();
+        $model->unusedDevice->delete();
         $exists = $model->getDevices()->unused()->count();
         if ($exists > 0) {
             return intval(($total - $exists) * 100 / $total);

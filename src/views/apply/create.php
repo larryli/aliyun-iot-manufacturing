@@ -1,8 +1,8 @@
 <?php
 
+use app\Html;
 use app\models\Product;
 use app\widgets\ActiveForm;
-use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Apply */
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">
-                <?= Html::submitButton('批量创建', ['class' => 'btn btn-primary']) ?>
+                <?= Html::submitButton('批量创建', ['class' => 'btn btn-primary', 'icon' => 'plus']) ?>
             </div>
         </div>
         <?php ActiveForm::end(); ?>

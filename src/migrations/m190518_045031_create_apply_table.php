@@ -20,13 +20,13 @@ class m190518_045031_create_apply_table extends Migration
 
         $this->createTable('{{%apply}}', [
             'id' => $this->primaryKey(),
-            'product_key' => $this->string(),
-            'product_name' => $this->string(),
-            'title' => $this->string(),
-            'description' => $this->text(),
-            'start_serial_no' => $this->string(),
-            'count' => $this->integer(),
-            'created_at' => $this->integer(),
+            'product_key' => $this->string()->notNull(),
+            'product_name' => $this->string()->notNull(),
+            'title' => $this->string()->notNull(),
+            'description' => $this->text()->notNull(),
+            'start_serial_no' => $this->string()->notNull(),
+            'count' => $this->integer()->notNull(),
+            'created_at' => $this->integer()->notNull(),
         ], $tableOptions);
 
         $this->createIndex('idx-apply-product_key', '{{%apply}}', [

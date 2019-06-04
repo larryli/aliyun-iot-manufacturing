@@ -1,10 +1,8 @@
 <?php
 
-use yii\bootstrap\ActiveForm;
-
 /* @var $this yii\web\View */
 /* @var $model app\forms\SetupForm */
-/* @var $form ActiveForm */
+/* @var $form app\widgets\ActiveForm */
 ?>
 <div class="panel panel-default product-keys"<?= empty($model->products) ? ' style="display:none"' : '' ?>>
     <div class="panel-heading">

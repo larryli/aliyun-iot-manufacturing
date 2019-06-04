@@ -1,9 +1,8 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 
+use app\Html;
 use yii\bootstrap\Progress;
-use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\web\YiiAsset;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Apply */
@@ -24,7 +23,6 @@ jQuery('#progress').attr('style','width:'+v+'%').text(v+'%');c(p+1)}else{
 jQuery(location).attr('href','{$success}')}})},w=()=>{jQuery.post('{$waiting}').fail(f).done(v=>{if(v){
 jQuery('#info').text('正在从阿里云 IoT 批量创建设备，请稍候。');c(1)}else{w()}})};w()
 EOF;
-YiiAsset::register($this);
 $this->registerJs($js);
 ?>
 <div class="apply-creating">

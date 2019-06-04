@@ -1,8 +1,8 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 
+use app\Html;
 use app\models\Apply;
-use yii\bootstrap\Html;
-use yii\grid\ActionColumn;
+use app\widgets\ActionColumn;
 use yii\grid\GridView;
 use yii\grid\SerialColumn;
 
@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('批量创建设备', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('批量创建设备', ['create'], ['class' => 'btn btn-success', 'icon' => 'plus']) ?>
     </p>
 
     <?= GridView::widget([
@@ -53,10 +53,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '{view} {active} {delete}',
                 'buttons' => [
                     'active' => function ($url, $model, $key) {
-                        return Html::a(Html::icon('ok'), $url, [
+                        return Html::a('激活', $url, [
                             'title' => '激活',
                             'aria-label' => '激活',
                             'data-pjax' => '0',
+                            'class' => 'btn btn-warning btn-xs',
+                            'icon' => 'ok',
                             'data-confirm' => "确定要激活此批次的设备开始量产么？\n此操作同时会将其他批次的未量产设备取消等待量产状态。",
                             'data-method' => 'post',
                         ]);

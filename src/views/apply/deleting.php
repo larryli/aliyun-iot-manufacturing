@@ -1,9 +1,8 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 
+use app\Html;
 use yii\bootstrap\Progress;
-use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\web\YiiAsset;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Apply */
@@ -19,7 +18,6 @@ yii.init();var d=()=>{jQuery.post('{$deleting}').fail(x=>{if(x.responseJSON!=und
 jQuery('#info').text(x.responseJSON.message).attr('class','alert alert-danger')}}).done(v=>{if(v<100){
 jQuery('#progress').attr('style','width:'+v+'%').text(v+'%');d()}else{jQuery('#done').trigger('click')}})};d()
 EOF;
-YiiAsset::register($this);
 $this->registerJs($js);
 ?>
 <div class="apply-creating">

@@ -1,8 +1,7 @@
 <?php
 
+use app\Html;
 use app\widgets\ActiveForm;
-use yii\bootstrap\Html;
-use yii\web\YiiAsset;
 
 /* @var $this yii\web\View */
 /* @var $model app\forms\SetupForm */
@@ -16,7 +15,6 @@ jQuery('#{$id}').change(o=>$(o.target).val()=='sqlite'?s.show()&&m.hide():m.show
 jQuery('.setup-form>form').on('ajaxComplete',(e,xhr)=>xhr.responseJSON.productKeys!=undefined?
 jQuery('.product-keys').replaceWith(xhr.responseJSON.productKeys):jQuery('.product-keys').hide())
 EOF;
-YiiAsset::register($this);
 $this->registerJs($js);
 ?>
 <div class="site-setup">
@@ -60,7 +58,7 @@ $this->registerJs($js);
 
         <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">
-                <?= Html::submitButton('设置', ['class' => 'btn btn-primary']) ?>
+                <?= Html::submitButton('设置', ['class' => 'btn btn-primary', 'icon' => 'wrench']) ?>
             </div>
         </div>
         <?php ActiveForm::end(); ?>

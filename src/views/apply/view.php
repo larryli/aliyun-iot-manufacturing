@@ -1,11 +1,10 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 
+use app\Html;
 use app\models\Device;
-use yii\grid\ActionColumn;
+use app\widgets\ActionColumn;
 use yii\grid\GridView;
 use yii\grid\SerialColumn;
-use yii\helpers\Html;
-use yii\web\YiiAsset;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
@@ -15,8 +14,6 @@ use yii\widgets\DetailView;
 $this->title = $model->title . '批次';
 $this->params['breadcrumbs'][] = ['label' => '量产批次', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-
-YiiAsset::register($this);
 ?>
 <div class="apply-view">
 
@@ -28,6 +25,7 @@ YiiAsset::register($this);
                 'class' => 'btn btn-warning',
                 'data-confirm' => "确定要激活此批次的设备开始量产么？\n此操作同时会将其他批次的未量产设备取消等待量产状态。",
                 'data-method' => 'post',
+                'icon' => 'ok',
             ]) ?>
         <?php endif; ?>
         <?php if (!$model->getDevices()->exists() || $model->getDevices()->unused()->exists()): ?>
@@ -35,6 +33,7 @@ YiiAsset::register($this);
                 'class' => 'btn btn-danger',
                 'data-confirm' => '确定要删除此批次么？',
                 'data-method' => 'post',
+                'icon' => 'trash',
             ]) ?>
         <?php endif; ?>
     </p>

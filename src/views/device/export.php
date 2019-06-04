@@ -1,7 +1,7 @@
 <?php
 
+use app\Html;
 use app\widgets\ActiveForm;
-use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\forms\ExportForm */
@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">
-                <?= Html::submitButton('导出量产数据文件', ['class' => 'btn btn-primary']) ?>
+                <?= Html::submitButton('导出量产数据文件', ['class' => 'btn btn-primary', 'icon' => 'download-alt']) ?>
             </div>
         </div>
         <?php ActiveForm::end(); ?>

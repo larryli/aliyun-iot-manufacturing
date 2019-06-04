@@ -1,7 +1,6 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 
-use yii\helpers\Html;
-use yii\web\YiiAsset;
+use app\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
@@ -9,7 +8,6 @@ use yii\widgets\DetailView;
 
 $this->title = "{$model->productName}：{$model->device_name}";
 $this->params['breadcrumbs'][] = $this->title;
-YiiAsset::register($this);
 ?>
 <div class="device-view">
 

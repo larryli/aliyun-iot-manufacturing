@@ -11,6 +11,7 @@
     "ext-mbstring": "*",
     "ext-openssl": "*",
     "ext-pdo_sqlite": "*",
+    "ext-zip": "*",
     "alibabacloud/iot": "^1.6",
     "yiisoft/yii2": "~2.0",
     "yiisoft/yii2-bootstrap": "~2.0"

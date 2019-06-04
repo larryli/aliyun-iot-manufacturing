@@ -1,8 +1,8 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 
+use app\Html;
 use app\models\Device;
-use yii\bootstrap\Html;
-use yii\grid\ActionColumn;
+use app\widgets\ActionColumn;
 use yii\grid\GridView;
 use yii\grid\SerialColumn;
 
@@ -20,10 +20,10 @@ $query = $dataProvider->query;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('批量创建设备', ['apply/create'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('选择批次激活开始量产', ['apply/index'], ['class' => 'btn btn-info']) ?>
+        <?= Html::a('批量创建设备', ['apply/create'], ['class' => 'btn btn-success', 'icon' => 'plus']) ?>
+        <?= Html::a('选择批次激活开始量产', ['apply/index'], ['class' => 'btn btn-info', 'icon' => 'ok']) ?>
         <?php if (Device::existsSuccess()): ?>
-            <?= Html::a('导出量产数据', ['export'], ['class' => 'btn btn-success']) ?>
+            <?= Html::a('导出量产数据', ['export'], ['class' => 'btn btn-success', 'icon' => 'download-alt']) ?>
         <?php endif; ?>
     </p>
 
@@ -69,10 +69,12 @@ $query = $dataProvider->query;
                 'template' => '{view} {apply}',
                 'buttons' => [
                     'apply' => function ($url, $model, $key) {
-                        return Html::a(Html::icon('tasks'), ['apply/view', 'id' => $model->apply_id], [
+                        return Html::a('批次', ['apply/view', 'id' => $model->apply_id], [
                             'title' => '批次',
                             'aria-label' => '批次',
                             'data-pjax' => '0',
+                            'class' => 'btn btn-default btn-xs',
+                            'icon' => 'tasks',
                         ]);
                     },
                 ],

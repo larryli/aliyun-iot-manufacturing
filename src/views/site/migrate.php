@@ -1,6 +1,6 @@
 <?php
 
-use yii\bootstrap\Html;
+use app\Html;
 
 /* @var $this yii\web\View */
 /* @var $content string */

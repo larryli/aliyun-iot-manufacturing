@@ -33,7 +33,7 @@ class Apply extends ActiveRecord
     /**
      * @var string[]
      */
-    protected $serialNos = [];
+    protected $serialNos;
 
     /**
      * {@inheritdoc}
@@ -53,7 +53,7 @@ class Apply extends ActiveRecord
             [['description'], 'string'],
             [['product_key', 'start_serial_no', 'title'], 'string', 'max' => 255],
             ['product_key', 'in', 'range' => array_keys(Product::texts())],
-            ['start_serial_no', 'match', 'pattern' => '/^[a-z0-9]+\d+$/i'],
+            ['start_serial_no', 'match', 'pattern' => '/^[a-z0-9]*\d+$/i'],
             ['count', 'integer', 'min' => 1, 'max' => 1000],
             ['start_serial_no', 'validateSerialNo'],
         ];
@@ -184,7 +184,7 @@ class Apply extends ActiveRecord
         if (empty($this->serialNos)) {
             return null;
         }
-        $serialNo = reset($this->serialNos);
+        $serialNo = array_shift($this->serialNos);
         if (empty($this->serialNos)) {
             Yii::$app->cache->delete(static::class . $this->id);
         } else {

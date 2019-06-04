@@ -4,7 +4,7 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
     "This file is @generated automatically"
   ],
-  "content-hash": "9a34196a5ea485877e776afc9ce8a7c0",
+  "content-hash": "5965b74e1cf4a3fb6315e030a7204bab",
   "packages": [
     {
       "name": "adbario/php-dot-notation",
@@ -150,7 +150,7 @@
     },
     {
       "name": "alibabacloud/iot",
-      "version": "1.7.6",
+      "version": "1.7.9",
       "source": {
         "type": "git",
         "url": "https://github.com/alibabacloud-sdk-php/iot.git",
@@ -1379,7 +1379,8 @@
     "ext-json": "*",
     "ext-mbstring": "*",
     "ext-openssl": "*",
-    "ext-pdo_sqlite": "*"
+    "ext-pdo_sqlite": "*",
+    "ext-zip": "*"
   },
   "platform-dev": []
 }

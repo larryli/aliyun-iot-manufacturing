@@ -6,7 +6,7 @@
 
 /* @var $exception Exception */
 
-use yii\bootstrap\Html;
+use app\Html;
 
 $this->title = $name;
 ?>

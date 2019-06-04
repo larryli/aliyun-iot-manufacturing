@@ -20,13 +20,13 @@ class m190518_070900_create_device_table extends Migration
 
         $this->createTable('{{%device}}', [
             'id' => $this->primaryKey(),
-            'serial_no' => $this->string()->unique(),
-            'apply_id' => $this->integer(),
-            'device_name' => $this->string(),
-            'device_secret' => $this->string(),
+            'serial_no' => $this->string()->notNull()->unique(),
+            'apply_id' => $this->integer()->notNull(),
+            'device_name' => $this->string()->notNull(),
+            'device_secret' => $this->string()->notNull(),
             'state' => $this->tinyInteger()->notNull()->defaultValue(0),
-            'created_at' => $this->integer(),
-            'updated_at' => $this->integer(),
+            'created_at' => $this->integer()->notNull(),
+            'updated_at' => $this->integer()->notNull(),
         ], $tableOptions);
 
         $this->createIndex('idx-device-apply_id', '{{%device}}', [

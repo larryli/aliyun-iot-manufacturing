@@ -50,14 +50,6 @@ class DeviceQuery extends ActiveQuery
     }
 
     /**
-     * @return DeviceQuery
-     */
-    public function used()
-    {
-        return $this->andOnCondition(['state' => [Device::STATE_SUCCESS, Device::STATE_DONE]]);
-    }
-
-    /**
      * @param string|string[] $key
      * @return DeviceQuery
      */

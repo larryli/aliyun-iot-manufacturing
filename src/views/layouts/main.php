@@ -1,7 +1,8 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 
+use app\Asset;
 use app\widgets\Alert;
-use yii\bootstrap\Nav;
+use app\widgets\Nav;
 use yii\bootstrap\NavBar;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
@@ -15,6 +16,8 @@ $config = Yii::$app->get('config');
 if (!$config->empty()) {
     $status = Html::tag('p', app\models\Device::statusHtml(), ['class' => 'navbar-text']);
 }
+
+Asset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -46,8 +49,8 @@ if (!$config->empty()) {
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => '设备列表', 'url' => ['/device/index']],
-            ['label' => '量产批次', 'url' => ['/apply/index']],
+            ['label' => '设备列表', 'url' => ['/device/index'], 'icon' => 'scale'],
+            ['label' => '量产批次', 'url' => ['/apply/index'], 'icon' => 'tasks'],
         ],
     ]);
     NavBar::end();

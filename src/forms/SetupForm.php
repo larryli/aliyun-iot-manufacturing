@@ -5,11 +5,11 @@ namespace app\forms;
 use app\aliyun\Exception as AliException;
 use app\aliyun\Iot;
 use app\Config;
+use app\Html;
 use Yii;
 use yii\base\Exception as BaseException;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
-use yii\bootstrap\Html;
 use yii\db\Connection;
 use yii\db\Exception as DbException;
 use yii\di\Instance;
@@ -153,12 +153,12 @@ class SetupForm extends Model
             return $model->dbPrefix == 'sqlite';
         };
         $prefixId = Html::getInputId($this, 'dbPrefix');
-        $whenClientSqlite = "function (attribute, value) { return $('#{$prefixId}').val() === 'sqlite' }";
+        $whenClientSqlite = "function (attribute, value) { return $('#{$prefixId}').val() == 'sqlite' }";
         $whenMysql = function ($model) {
             /** @var $model static */
             return $model->dbPrefix == 'mysql';
         };
-        $whenClientMysql = "function (attribute, value) { return $('#{$prefixId}').val() === 'mysql' }";
+        $whenClientMysql = "function (attribute, value) { return $('#{$prefixId}').val() == 'mysql' }";
 
         return [
             ['dbPrefix', 'required'],

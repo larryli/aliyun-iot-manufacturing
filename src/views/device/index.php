@@ -22,8 +22,11 @@ $query = $dataProvider->query;
     <p>
         <?= Html::a('批量创建设备', ['apply/create'], ['class' => 'btn btn-success', 'icon' => 'plus']) ?>
         <?= Html::a('选择批次激活开始量产', ['apply/index'], ['class' => 'btn btn-info', 'icon' => 'ok']) ?>
+        <?php if (Device::existsNew()): ?>
+            <?= Html::a('导出 ESP NVS 量产数据', ['esp-nvs'], ['class' => 'btn btn-success', 'icon' => 'download']) ?>
+        <?php endif; ?>
         <?php if (Device::existsSuccess()): ?>
-            <?= Html::a('导出量产数据', ['export'], ['class' => 'btn btn-success', 'icon' => 'download-alt']) ?>
+            <?= Html::a('导出已量产完成数据', ['export'], ['class' => 'btn btn-success', 'icon' => 'download-alt']) ?>
         <?php endif; ?>
     </p>
 

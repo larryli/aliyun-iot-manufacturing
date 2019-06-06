@@ -80,6 +80,14 @@ class Device extends ActiveRecord
     /**
      * @return bool Has success device
      */
+    public static function existsNew()
+    {
+        return static::find()->new()->exists();
+    }
+
+    /**
+     * @return bool Has success device
+     */
     public static function existsSuccess()
     {
         return static::find()->success()->exists();

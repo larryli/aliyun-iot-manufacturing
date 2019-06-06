@@ -4,11 +4,14 @@ namespace app\controllers;
 
 use app\filters\NotConfigFilter;
 use app\filters\NotExistsDeviceFilter;
+use app\forms\DownloadForm;
+use app\forms\EspNvsForm;
 use app\forms\ExportForm;
 use app\models\Device;
 use app\models\DeviceSearch;
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\helpers\FileHelper;
 use yii\helpers\Html;
 use yii\mutex\Mutex;
 use yii\web\ConflictHttpException;
@@ -59,12 +62,35 @@ class DeviceController extends Controller
      */
     public function actionDownload($filename)
     {
-        if (ExportForm::existsFile($filename)) {
-            return Yii::$app->response->sendContentAsFile(ExportForm::getFile($filename), $filename, [
-                'mimeType' => 'text/csv',
+        if (DownloadForm::existsFile($filename)) {
+            return Yii::$app->response->sendContentAsFile(DownloadForm::getFile($filename), $filename, [
+                'mimeType' => FileHelper::getMimeTypeByExtension($filename),
             ]);
         }
         throw new NotFoundHttpException("File {$filename} not exists.");
+    }
+
+    /**
+     * @return mixed
+     */
+    public function actionEspNvs()
+    {
+        if (!Device::existsNew()) {
+            return $this->redirect(['index']);
+        }
+
+        $model = new EspNvsForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->download()) {
+            Yii::$app->session->setFlash('success',
+                '量产数据导出成功。请在一个小时内' . Html::a(
+                    '下载数据文件', ['download', 'filename' => $model->filename]) . '。');
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('esp-nvs', [
+            'model' => $model,
+        ]);
     }
 
     /**

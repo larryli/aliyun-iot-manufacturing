@@ -37,3 +37,8 @@ a.desc:after {
 .grid-view th {
     white-space: nowrap;
 }
+
+p.hint {
+    margin-bottom: 0;
+    font-size: 8pt;
+}

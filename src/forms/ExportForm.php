@@ -3,65 +3,30 @@
 namespace app\forms;
 
 use app\models\Device;
-use app\models\Product;
-use Yii;
-use yii\base\Model;
-use yii\db\Expression;
+use app\models\DeviceQuery;
 
 /**
  * ExportForm
- *
- * @property string $filename
- * @property string[] $products
  */
-class ExportForm extends Model
+class ExportForm extends DownloadForm
 {
-    /**
-     * @var string
-     */
-    public $productKey;
-    /**
-     * @var string
-     */
-    public $serialNoHeader;
-    /**
-     * @var string
-     */
-    public $productKeyHeader;
-    /**
-     * @var string
-     */
-    public $deviceNameHeader;
-    /**
-     * @var string
-     */
-    public $deviceSecretHeader;
-    /**
-     * @var string
-     */
-    private $_filename;
-    /**
-     * @var string[]
-     */
-    private $_products;
-
     /**
      * {@inheritdoc}
      */
     public function init()
     {
         parent::init();
-        if ($this->serialNoHeader === null) {
-            $this->serialNoHeader = 'SerialNo';
+        if ($this->serialNoKeyName === null) {
+            $this->serialNoKeyName = 'SerialNo';
         }
-        if ($this->productKeyHeader === null) {
-            $this->productKeyHeader = '';
+        if ($this->productKeyKeyName === null) {
+            $this->productKeyKeyName = '';
         }
-        if ($this->deviceNameHeader === null) {
-            $this->deviceNameHeader = 'DeviceName';
+        if ($this->deviceNameKeyName === null) {
+            $this->deviceNameKeyName = 'DeviceName';
         }
-        if ($this->deviceSecretHeader === null) {
-            $this->deviceSecretHeader = '';
+        if ($this->deviceSecretKeyName === null) {
+            $this->deviceSecretKeyName = '';
         }
     }
 
@@ -71,15 +36,15 @@ class ExportForm extends Model
     public function rules()
     {
         return [
-            [['productKey', 'serialNoHeader', 'deviceNameHeader'], 'required'],
-            ['productKey', 'in', 'range' => array_keys($this->getProducts())],
-            [['serialNoHeader', 'productKeyHeader', 'deviceNameHeader', 'deviceSecretHeader'], 'trim'],
-            [['serialNoHeader', 'productKeyHeader', 'deviceNameHeader', 'deviceSecretHeader'], 'match',
+            [['productKey', 'serialNoKeyName', 'deviceNameKeyName'], 'required'],
+            [['productKey', 'serialNoKeyName', 'productKeyKeyName', 'deviceNameKeyName', 'deviceSecretKeyName'], 'trim'],
+            ['productKey', 'in', 'range' => array_keys($this->products)],
+            [['serialNoKeyName', 'productKeyKeyName', 'deviceNameKeyName', 'deviceSecretKeyName'], 'match',
                 'pattern' => '/^[_a-z]+[_a-z0-9]*$/i',
                 'message' => '必须是字母与数字以及下划线，并且不能以字母开头。'],
-            [['productKeyHeader', 'deviceNameHeader', 'deviceSecretHeader'], 'compare', 'compareAttribute' => 'serialNoHeader', 'operator' => '!='],
-            [['deviceNameHeader', 'deviceSecretHeader'], 'compare', 'compareAttribute' => 'productKeyHeader', 'operator' => '!='],
-            [['deviceSecretHeader'], 'compare', 'compareAttribute' => 'deviceNameHeader', 'operator' => '!='],
+            [['productKeyKeyName', 'deviceNameKeyName', 'deviceSecretKeyName'], 'compare', 'compareAttribute' => 'serialNoKeyName', 'operator' => '!='],
+            [['deviceNameKeyName', 'deviceSecretKeyName'], 'compare', 'compareAttribute' => 'productKeyKeyName', 'operator' => '!='],
+            [['deviceSecretKeyName'], 'compare', 'compareAttribute' => 'deviceNameKeyName', 'operator' => '!='],
         ];
     }
 
@@ -90,93 +55,53 @@ class ExportForm extends Model
     {
         return [
             'productKey' => '产品',
-            'serialNoHeader' => 'SerialNo 字段名',
-            'productKeyHeader' => 'ProductKey 字段名',
-            'deviceNameHeader' => 'DeviceName 字段名',
-            'deviceSecretHeader' => 'DeviceSecret 字段名',
+            'serialNoKeyName' => 'SerialNo 字段名',
+            'productKeyKeyName' => 'ProductKey 字段名',
+            'deviceNameKeyName' => 'DeviceName 字段名',
+            'deviceSecretKeyName' => 'DeviceSecret 字段名',
         ];
     }
 
     /**
-     * @return bool
+     * @return DeviceQuery
      */
-    public function download()
+    protected function findDevice()
     {
-        if ($this->validate()) {
-            $headers = [$this->serialNoHeader];
-            if (!empty($this->productKeyHeader)) {
-                $headers[] = $this->productKeyHeader;
-            }
-            $headers[] = $this->deviceNameHeader;
-            if (!empty($this->deviceSecretHeader)) {
-                $headers[] = $this->deviceSecretHeader;
-            }
-            $rows = [implode(',', $headers)];
-            $applies = [];
-            foreach (Device::find()->success()->productKey($this->productKey)->each() as $model) {
-                /** @var Device $model */
-                $cols = [$model->serialNo];
-                if (!empty($this->productKeyHeader)) {
-                    $cols[] = $this->productKey;
-                }
-                $cols[] = $model->deviceName;
-                if (!empty($this->deviceSecretHeader)) {
-                    $cols[] = $model->deviceSecret;
-                }
-                $rows[] = implode(',', $cols);
-                $applies[] = $model->apply_id;
-            }
-            $applies = array_unique($applies);
-            Device::updateAll(['state' => Device::STATE_DONE], ['apply_id' => $applies, 'state' => Device::STATE_SUCCESS]);
-            $this->_filename = $this->productKey . date('-Ymd-His') . '.csv';
-            Yii::$app->cache->set(static::class . $this->_filename, implode("\n", $rows), 3600);
-            return true;
-        }
-        return false;
+        return Device::find()->success();
     }
 
     /**
+     * @param string $filename
      * @return string
      */
-    public function getFilename()
+    protected function generateFile(&$filename)
     {
-        return $this->_filename;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getProducts()
-    {
-        if ($this->_products === null) {
-            $products = Product::texts();
-            $this->_products = [];
-            foreach (Device::find()->success()->joinWith('apply')
-                         ->select(['productKey' => 'apply.product_key'])->distinct()
-                         ->addSelect(['deviceCount' => new Expression('COUNT(*)')])->all() as $model) {
-                $this->_products[$model->productKey] = (isset($products[$model->productKey]) ?
-                        $products[$model->productKey] : "未知产品 {$model->productKey}")
-                    . "，可同步量产数量：{$model->deviceCount}";
-            }
+        $KeyNames = [$this->serialNoKeyName];
+        if (!empty($this->productKeyKeyName)) {
+            $KeyNames[] = $this->productKeyKeyName;
         }
-        return $this->_products;
-    }
-
-    /**
-     * @param string $filename
-     * @return bool
-     */
-    public static function existsFile($filename)
-    {
-        return Yii::$app->cache->exists(static::class . $filename);
-    }
-
-    /**
-     * @param string $filename
-     * @return bool
-     */
-    public static function getFile($filename)
-    {
-        return Yii::$app->cache->get(static::class . $filename);
+        $KeyNames[] = $this->deviceNameKeyName;
+        if (!empty($this->deviceSecretKeyName)) {
+            $KeyNames[] = $this->deviceSecretKeyName;
+        }
+        $rows = [implode(',', $KeyNames)];
+        $applies = [];
+        foreach (Device::find()->success()->productKey($this->productKey)->each() as $model) {
+            /** @var Device $model */
+            $cols = [$model->serialNo];
+            if (!empty($this->productKeyKeyName)) {
+                $cols[] = $this->productKey;
+            }
+            $cols[] = $model->deviceName;
+            if (!empty($this->deviceSecretKeyName)) {
+                $cols[] = $model->deviceSecret;
+            }
+            $rows[] = implode(',', $cols);
+            $applies[] = $model->apply_id;
+        }
+        $applies = array_unique($applies);
+        Device::updateAll(['state' => Device::STATE_DONE], ['apply_id' => $applies, 'state' => Device::STATE_SUCCESS]);
+        $filename = $this->productKey . date('-Ymd-His') . '.csv';
+        return implode("\n", $rows);
     }
 }

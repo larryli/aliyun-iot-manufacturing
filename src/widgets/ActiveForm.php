@@ -16,6 +16,6 @@ class ActiveForm extends BaseActiveForm
     public $fieldConfig = [
         'template' => "{label}\n<div class=\"col-lg-4\">{input}\n{hint}</div>\n<div class=\"col-lg-6\">{error}</div>",
         'labelOptions' => ['class' => 'col-lg-2 control-label'],
-        'hintOptions' => ['class' => 'help-block'],
+        'hintOptions' => ['class' => 'help-block hint'],
     ];
 }

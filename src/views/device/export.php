@@ -7,7 +7,7 @@ use app\widgets\ActiveForm;
 /* @var $model app\forms\ExportForm */
 /* @var $form ActiveForm */
 
-$this->title = '导出量产数据';
+$this->title = '导出已量产完成数据';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="device-export">
@@ -19,10 +19,10 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php $form = ActiveForm::begin(); ?>
 
         <?= $form->field($model, 'productKey')->dropDownList($model->products) ?>
-        <?= $form->field($model, 'serialNoHeader') ?>
-        <?= $form->field($model, 'productKeyHeader')->hint('可选，为空时不导出此字段。') ?>
-        <?= $form->field($model, 'deviceNameHeader') ?>
-        <?= $form->field($model, 'deviceSecretHeader')->hint('可选，为空时不导出此字段。') ?>
+        <?= $form->field($model, 'serialNoKeyName') ?>
+        <?= $form->field($model, 'productKeyKeyName')->hint('可选，为空时不导出此字段。') ?>
+        <?= $form->field($model, 'deviceNameKeyName') ?>
+        <?= $form->field($model, 'deviceSecretKeyName')->hint('可选，为空时不导出此字段。') ?>
 
         <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">

@@ -52,19 +52,19 @@ class DeviceController extends Controller
     }
 
     /**
-     * @param string $file
+     * @param string $filename
      * @return mixed
      * @throws NotFoundHttpException
      * @throws RangeNotSatisfiableHttpException
      */
-    public function actionDownload($file)
+    public function actionDownload($filename)
     {
-        if (ExportForm::existsFile($file)) {
-            return Yii::$app->response->sendContentAsFile(ExportForm::getFile($file), $file, [
+        if (ExportForm::existsFile($filename)) {
+            return Yii::$app->response->sendContentAsFile(ExportForm::getFile($filename), $filename, [
                 'mimeType' => 'text/csv',
             ]);
         }
-        throw new NotFoundHttpException("File {$file} not exists.");
+        throw new NotFoundHttpException("File {$filename} not exists.");
     }
 
     /**
@@ -74,6 +74,10 @@ class DeviceController extends Controller
      */
     public function actionExport()
     {
+        if (!Device::existsSuccess()) {
+            return $this->redirect(['index']);
+        }
+
         /** @var Mutex $mutex */
         $mutex = Yii::$app->get('mutex');
         if (!$mutex->acquire('DEVICE_REG')) {
@@ -85,7 +89,7 @@ class DeviceController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->download()) {
             Yii::$app->session->setFlash('success',
                 '量产数据导出成功。请在一个小时内' . Html::a(
-                    '下载数据文件', ['download', 'file' => $model->file]) . '。');
+                    '下载数据文件', ['download', 'filename' => $model->filename]) . '。');
             return $this->redirect(['index']);
         }
 

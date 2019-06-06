@@ -19,6 +19,10 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php $form = ActiveForm::begin(); ?>
 
         <?= $form->field($model, 'productKey')->dropDownList($model->products) ?>
+        <?= $form->field($model, 'serialNoHeader') ?>
+        <?= $form->field($model, 'productKeyHeader')->hint('可选，为空时不导出此字段。') ?>
+        <?= $form->field($model, 'deviceNameHeader') ?>
+        <?= $form->field($model, 'deviceSecretHeader')->hint('可选，为空时不导出此字段。') ?>
 
         <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">
